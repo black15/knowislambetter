@@ -26,11 +26,17 @@ SECRET_KEY = 'django-insecure-(8)-lee969%kgqj$*@8f9qh+zfciv$5^hijjjtn1$($jzxlq(g
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'http://localhost:3000',
-    'http://127.0.0.1:3000',
+    'localhost',
+    '127.0.0.1'
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True
+# Cors Headers
+
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = (
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+)
 
 # Application definition
 
@@ -45,7 +51,7 @@ INSTALLED_APPS = [
     'account',
     'blog',
     'corsheaders',
-    'rest_framework',
+    'graphene_django',
 ]
 
 MIDDLEWARE = [
@@ -131,3 +137,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Graphene_Django Configurations
+
+GRAPHENE = {
+  "SCHEMA": "blog.schema.schema",
+}
+ 
