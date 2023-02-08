@@ -1,21 +1,17 @@
 import graphene
 from graphene_django import DjangoObjectType
 from django.contrib.auth import get_user_model
-from .models import Post, Profile, Tag
+from .models import Post, Tag
+
+User = get_user_model()
 
 class PostType(DjangoObjectType):
   class Meta:
    model = Post
-   fields = ('id', 'title', 'slug', 'body', 'published', 'publishedAt', 'author', 'tags',)
 
-class UserType(DjangoObjectType):
+class AuthorType(DjangoObjectType):
    class Meta:
-      model = get_user_model()
-      
-class ProfileType(DjangoObjectType):
-  class Meta:
-   model = Profile
-   fields = ('id', 'user', 'bio', 'website',)
+      model = User
 
 class TagType(DjangoObjectType):
   class Meta:
@@ -24,8 +20,8 @@ class TagType(DjangoObjectType):
 
 class Query(graphene.ObjectType):
    posts    = graphene.List(PostType)
-   authors  = graphene.List(ProfileType)
    tags     = graphene.List(TagType)
+   authors  = graphene.List(AuthorType)
    post_by_slug      = graphene.Field(PostType, slug=graphene.String())
    posts_by_author   = graphene.List(PostType, author=graphene.String())
    posts_by_tag      = graphene.List(PostType, tag=graphene.String())
@@ -33,12 +29,12 @@ class Query(graphene.ObjectType):
    def resolve_posts(self, info, **kwargs):
       return Post.objects.filter(published=True)
 
-   def resolve_authors(self, info, **kwargs):
-      return Profile.objects.all()
-
    def resolve_tags(self, info, **kwargs):
       return Tag.objects.all()
    
+   def resolve_authors(self, info):
+      return User.objects.all()
+      
    def resolve_post_by_slug(self, info, slug):
       return Post.objects.get(slug=slug)
    
@@ -47,5 +43,8 @@ class Query(graphene.ObjectType):
    
    def resolve_posts_by_tag(self, info, tag):
       return Post.objects.filter(tags__name=tag)
+
+
+
 
 schema = graphene.Schema(query=Query)

@@ -1,9 +1,5 @@
 from django.contrib import admin
-from .models import Post, Profile, Tag
-
-@admin.register(Profile)
-class ProfileAdmin(admin.ModelAdmin):
-  model = Profile
+from .models import Post, Tag
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
@@ -17,17 +13,16 @@ class PostAdmin(admin.ModelAdmin):
     "id",
     "title",
     "slug",
-    "publishedAt",
     "published",
+    "createdAt",
   )
   list_filter = (
     "published",
-    "publishedAt",
+    "createdAt",
   )
   list_editable = (
     "title",
     "slug",
-    "publishedAt",
     "published",
   )
   search_fields = (
@@ -40,5 +35,5 @@ class PostAdmin(admin.ModelAdmin):
       "title",
     )
   }
-  date_hierarchy = "publishedAt"
+  date_hierarchy = "createdAt"
   save_on_top = True
